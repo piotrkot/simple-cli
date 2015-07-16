@@ -180,6 +180,7 @@ public final class CommandLineArgsTest {
             opt.value()
         );
     }
+
     /**
      * Can find short option with value.
      *
@@ -199,4 +200,23 @@ public final class CommandLineArgsTest {
             cli.getOptions().iterator().next().value()
         );
     }
+
+    /**
+     * Can find exceptional options.
+     *
+     * @throws Exception When it fails.
+     */
+    @Test
+    public void findExceptionOption() throws Exception {
+        final CommandLineArgs cli = new CommandLineArgs("--help=do");
+        Assert.assertFalse(
+            "Opt dash found",
+            cli.findOption("-").iterator().hasNext()
+        );
+        Assert.assertFalse(
+            "Opt equals found",
+            cli.findOption("=").iterator().hasNext()
+        );
+    }
+
 }
