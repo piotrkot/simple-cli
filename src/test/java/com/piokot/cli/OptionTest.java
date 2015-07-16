@@ -50,6 +50,7 @@ public final class OptionTest {
                 .iterator().hasNext()
         );
     }
+
     /**
      * Can return one argument with parameter defined afterwards.
      *
@@ -69,6 +70,7 @@ public final class OptionTest {
         );
         Assert.assertFalse("Param after is an argument", args.hasNext());
     }
+
     /**
      * Can return one argument with parameter defined before.
      *
@@ -88,6 +90,7 @@ public final class OptionTest {
         );
         Assert.assertFalse("Param before is an argument", args.hasNext());
     }
+
     /**
      * Can return two arguments.
      *
@@ -113,6 +116,7 @@ public final class OptionTest {
         );
         Assert.assertFalse("More arguments", args.hasNext());
     }
+
     /**
      * Can return empty value.
      *
@@ -129,6 +133,7 @@ public final class OptionTest {
             new Option("", Collections.singletonList("arg")).value().isEmpty()
         );
     }
+
     /**
      * Can return single value.
      *
@@ -148,6 +153,26 @@ public final class OptionTest {
             new Option(val, Collections.singletonList("ar")).value()
         );
     }
+
+    /**
+     * Can return exceptional value.
+     *
+     * @throws Exception When it fails.
+     */
+    @Test
+    public void returnExceptionalValue() throws Exception {
+        Assert.assertEquals(
+            "Non empty exception value",
+            "",
+            new Option("par1=", Collections.<String>emptyList()).value()
+        );
+        Assert.assertEquals(
+            "Wrong value with no key",
+            "val1",
+            new Option("=val1", Collections.<String>emptyList()).value()
+        );
+    }
+
     /**
      * Can return empty key.
      *
@@ -168,6 +193,7 @@ public final class OptionTest {
             new Option("kval", Collections.singletonList("kk")).key().isEmpty()
         );
     }
+
     /**
      * Can return non empty key.
      *
@@ -195,6 +221,25 @@ public final class OptionTest {
             "Empty key in main part",
             key,
             new Option("k=xad", Collections.<String>emptyList()).key()
+        );
+    }
+
+    /**
+     * Can return exceptional key.
+     *
+     * @throws Exception When it fails.
+     */
+    @Test
+    public void returnExceptionalKey() throws Exception {
+        Assert.assertEquals(
+            "Non empty exception key",
+            "",
+            new Option("=val", Collections.<String>emptyList()).key()
+        );
+        Assert.assertEquals(
+            "Wrong key with no value",
+            "key1",
+            new Option("key1=", Collections.<String>emptyList()).key()
         );
     }
 }
