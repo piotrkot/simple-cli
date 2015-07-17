@@ -23,12 +23,69 @@
  */
 package com.piokot.cli;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
- * Main Command Line class.
+ * Main Command Line class which finds options in simple and object oriented
+ * fashion.
  *
  * @author Piotr Kotlicki (piotr.kotlicki@gmail.com)
  * @version $Id$
  * @since 1.0
  */
 public final class CommandLineArgs {
+    /**
+     * Command line arguments.
+     */
+    private final transient Iterable<String> args;
+
+    /**
+     * Class constructor.
+     *
+     * @param arguments Command line arguments.
+     */
+    public CommandLineArgs(final String... arguments) {
+        this.args = Arrays.asList(arguments);
+    }
+
+    /**
+     * Finds option by a name.
+     *
+     * @param name Option name, that is a string right after the option dash.
+     * @return List of Options found for given name.
+     */
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+    public Iterable<Option> findOption(final String name) {
+        final List<Option> options = new ArrayList<>(0);
+        final String space = " ";
+        final String[] opts = space.concat(String.join(space, this.args))
+            .split(" -+");
+        final String[] optss = Arrays.copyOfRange(opts, 1, opts.length);
+        for (final String opt : optss) {
+            final String[] parts = opt.split(space);
+            final String main = parts[0].replaceFirst("^-+", "");
+            if (main.startsWith(name)) {
+                options.add(
+                    new Option(
+                        main.replace(name, ""),
+                        Arrays.stream(parts).skip(1)
+                            .collect(Collectors.<String>toList())
+                    )
+                );
+            }
+        }
+        return options;
+    }
+
+    /**
+     * Gets all options provided.
+     *
+     * @return List of Options found.
+     */
+    public Iterable<Option> getOptions() {
+        return this.findOption("");
+    }
 }
