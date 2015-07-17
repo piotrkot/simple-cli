@@ -25,8 +25,12 @@ package com.piokot.cli;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ListIterator;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 /**
  * Main Command Line class which finds options in simple and object oriented
@@ -40,7 +44,7 @@ public final class CommandLineArgs {
     /**
      * Command line arguments.
      */
-    private final transient Iterable<String> args;
+    private final transient Collection<String> args;
 
     /**
      * Class constructor.
@@ -60,19 +64,15 @@ public final class CommandLineArgs {
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterable<Option> findOption(final String name) {
         final List<Option> options = new ArrayList<>(0);
-        final String space = " ";
-        final String[] opts = space.concat(String.join(space, this.args))
-            .split(" -+");
-        final String[] optss = Arrays.copyOfRange(opts, 1, opts.length);
-        for (final String opt : optss) {
-            final String[] parts = opt.split(space);
-            final String main = parts[0].replaceFirst("^-+", "");
-            if (main.startsWith(name)) {
+        final String main = String.format("^-+%s.*", Pattern.quote(name));
+        final String dash = String.format("^-+%s", Pattern.quote(name));
+        final FetchSubList<String> params = new FetchSubList<>(this.args);
+        for (final String param : params) {
+            if (param.matches(main)) {
                 options.add(
                     new Option(
-                        main.replace(name, ""),
-                        Arrays.stream(parts).skip(1)
-                            .collect(Collectors.<String>toList())
+                        param.replaceFirst(dash, ""),
+                        params.fetchUntil(param, s -> s.matches(main))
                     )
                 );
             }
@@ -87,5 +87,44 @@ public final class CommandLineArgs {
      */
     public Iterable<Option> getOptions() {
         return this.findOption("");
+    }
+
+    /**
+     * Linked list that can fetch elements according to given predicate.
+     *
+     * @param <E> Type of elements in the list.
+     */
+    class FetchSubList<E> extends LinkedList<E> {
+        /**
+         * Class constructor.
+         *
+         * @param coll Collection of elements to be placed in the list.
+         */
+        public FetchSubList(final Collection<? extends E> coll) {
+            super(coll);
+        }
+
+        /**
+         * Fetches elements from the list starting at given element. Elements
+         * are fetched until the predicate is satisfied.
+         *
+         * @param elem Starting element.
+         * @param pred Predicate for fetch.
+         * @return Collection of elements satisfying predicate.
+         */
+        public Collection<E> fetchUntil(final E elem, final Predicate<E> pred) {
+            final Collection<E> collection = new ArrayList<>(0);
+            final ListIterator<E> iter =
+                this.listIterator(this.indexOf(elem) + 1);
+            while (iter.hasNext()) {
+                final E next = iter.next();
+                if (pred.test(next)) {
+                    break;
+                } else {
+                    collection.add(next);
+                }
+            }
+            return collection;
+        }
     }
 }

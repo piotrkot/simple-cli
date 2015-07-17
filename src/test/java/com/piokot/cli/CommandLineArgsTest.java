@@ -208,14 +208,17 @@ public final class CommandLineArgsTest {
      */
     @Test
     public void findExceptionOption() throws Exception {
-        final CommandLineArgs cli = new CommandLineArgs("--help=do");
-        Assert.assertFalse(
-            "Opt dash found",
-            cli.findOption("-").iterator().hasNext()
-        );
+        final CommandLineArgs cli = new CommandLineArgs("--process=do");
+        final Option dashopt = cli.findOption("-").iterator().next();
+        Assert.assertEquals("Key dash found", "process", dashopt.key());
+        Assert.assertEquals("Val dash found", "do", dashopt.value());
         Assert.assertFalse(
             "Opt equals found",
             cli.findOption("=").iterator().hasNext()
+        );
+        Assert.assertFalse(
+            "Opt dot star found",
+            cli.findOption(".*").iterator().hasNext()
         );
     }
 
