@@ -33,8 +33,27 @@ http://ostermiller.org/utils/CmdLn.html | (version 1.08.02) | 6 files (730 loc)
 https://code.google.com/p/parse-cmd/ | (version 0.0.93) | 1 file (238 loc)
 http://jcommander.org/ | (latest commit b02e9dee4e) | 49 files (2226 loc)
 
-Some existing solutions are already a magnitude smaller in lines of code from 
-others. Can we get any better?
+Some existing solutions are already a magnitude smaller in lines of code from
+others. Can we get any better and still be object-oriented?
+
+When making contrasting approach one should not look at the current
+implementations. Thus, let think over the basic principles and responsibilities
+of the CLI objects.
+
+We must be able to **find options given list of arguments**. After that
+an **option must provide us with its _values_**. With little experience on Unix
+systems we know that option might be composed of a key with value
+(i.e. `du --max-depth=1`), a value (i.e. `df -H`), or even an
+argument (i.e. `cut -f 1,3`). Additionally, there can be short or long options,
+POSIX or GNU parser, and alike variations. But it all should not matter as
+the Option object should be concerned about the details.
+
+One may notice it is not that simple. Given `-Dparam2` we don't know whether it
+is:
+* option `-D` with `param2` value or 
+* option `-D` with `param` kay and `2` value or
+* option value `-Dparam2` or others
+
 
 <a name="MarkKidd">1</a>: Lorenz, Mark, and Jeff Kidd. Object-Oriented
 Software Metrics. Englewood Cliffs, NJ: Prentice Hall. 1994. ISBN 0-13-179292-X
