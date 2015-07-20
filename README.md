@@ -67,7 +67,7 @@ formatting? And if so, is it really the right place to put logic into?
 
 # How to use
 
-The simple design makes it 2 files with 110 loc. How about the usage?
+The simple design makes it **2 files with 110 loc**. How about the usage?
 
 ```java
 CommandLineArgs cli = new CommandLineArgs("--human-readable");
