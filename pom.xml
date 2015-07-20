@@ -74,6 +74,7 @@
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
+            <version>0.12.1</version>
             <configuration>
               <license>file:${basedir}/LICENSE</license>
               <excludes>
