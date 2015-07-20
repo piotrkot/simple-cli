@@ -69,23 +69,23 @@ formatting? And if so, is it really the right place to put logic into?
 
 The simple design makes it 2 files with 110 loc. How about the usage?
 
-```
+```java
 CommandLineArgs cli = new CommandLineArgs("--human-readable");
 cli.findOption("human-readable").iterator().hasNext(); // returns true
 ```
-```
+```java
 CommandLineArgs cli = new CommandLineArgs("--max-depth=1");
 cli.findOption("max-depth").iterator().next().value(); // returns "1"
 ```
 For ambiguous options we have an interpretation choice.
-```
+```java
 CommandLineArgs cli = new CommandLineArgs("-Xmx2048m", "-Xms256m");
 Iterator<Option> iter = cli.findOption("X").iterator();
 iter.next().value(); // returns "mx2048m"
 iter.next().value(); // returns "ms256m"
 ```
 or
-```
+```java
 CommandLineArgs cli = new CommandLineArgs("-Xmx2048m", "-Xms256m");
 cli.findOption("Xmx").iterator().next().value(); // returns "2048m"
 cli.findOption("Xms").iterator().next().value(); // returns "256m"
@@ -94,7 +94,7 @@ depending what is more preferable for the user.
 
 In case we don't exactly know what option name to search for we may find
 them all by:
-```
+```java
 Option option = new CommandLineArgs("-zxvf", "foo.tar.gz")
     .getOptions().iterator().next();
 option.value(); // returns "zxvf"
