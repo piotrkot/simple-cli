@@ -48,12 +48,62 @@ argument (i.e. `cut -f 1,3`). Additionally, there can be short or long options,
 POSIX or GNU parser, and alike variations. But it all should not matter as
 the Option object should be concerned about the details.
 
-One may notice it is not that simple. Given `-Dparam2` we don't know whether it
-is:
-* option `-D` with `param2` value or 
-* option `-D` with `param` kay and `2` value or
-* option value `-Dparam2` or others
+One may notice it is not that simple. Given argument of `-Dparam2` we don't
+know whether it is:
+* option `-D` with `param2` value or
+* option `-D` with `param` key and `2` value or
+* option value `-Dparam2` or something else.
 
+Indeed, there is ambiguity of interpretation. However, this is irrelevant as
+they are different views of the same argument. And whichever form you choose
+the result is positive.
+
+One may ask about the common generating help information. Right, it is not
+supported.
+Reacting on the options is the sole purpose of the application, so why reacting
+on the error should be the responsibility of the command line parser? And is
+this help flexible enough to print into different system streams, with special
+formatting? And if so, is it really the right place to put logic into?
+
+# How to use
+
+The simple design makes it 2 files with 110 loc. How about the usage?
+
+```
+CommandLineArgs cli = new CommandLineArgs("--human-readable");
+cli.findOption("human-readable").iterator().hasNext(); // returns true
+```
+```
+CommandLineArgs cli = new CommandLineArgs("--max-depth=1");
+cli.findOption("max-depth").iterator().next().value(); // returns "1"
+```
+For ambiguous options we have an interpretation choice.
+```
+CommandLineArgs cli = new CommandLineArgs("-Xmx2048m", "-Xms256m");
+Iterator<Option> iter = cli.findOption("X").iterator();
+iter.next().value(); // returns "mx2048m"
+iter.next().value(); // returns "ms256m"
+```
+or
+```
+CommandLineArgs cli = new CommandLineArgs("-Xmx2048m", "-Xms256m");
+cli.findOption("Xmx").iterator().next().value(); // returns "2048m"
+cli.findOption("Xms").iterator().next().value(); // returns "256m"
+```
+depending what is more preferable for the user.
+
+In case we don't exactly know what option name to search for we may find
+them all by:
+```
+Option option = new CommandLineArgs("-zxvf", "foo.tar.gz")
+    .getOptions().iterator().next();
+option.value(); // returns "zxvf"
+option.arguments().iterator().next(); // returns "foo.tar.gz"
+```
+
+Feel free to fork me on GitHub, report bugs or post comments.
+
+For Pull Requests, please run `mvn clean package -Pqulice`, first.
 
 <a name="MarkKidd">1</a>: Lorenz, Mark, and Jeff Kidd. Object-Oriented
 Software Metrics. Englewood Cliffs, NJ: Prentice Hall. 1994. ISBN 0-13-179292-X
