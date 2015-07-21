@@ -20,8 +20,8 @@ We will try to re-think Command Line Interface applications (CLI).
 There is a number of Java tools for recognizing command line options passed
 to programs:
 
-Program | Version | Size
---------|---------|-----
+Program | Version | Size<sup>[2](#LoC)</sup>
+--------|---------|-------------------------
 https://commons.apache.org/proper/commons-cli/ | (version 1.4-SNAPSHOT) | 23 files (2665 loc)
 http://args4j.kohsuke.org/ | (latest commit 00c192c445) | 63 files (2379 loc)
 http://jewelcli.lexicalscope.com/usage.html | (latest commit d282f87b93) | 90 files (2825 loc)
@@ -65,9 +65,24 @@ on the error should be the responsibility of the command line parser? And is
 this help flexible enough to print into different system streams, with special
 formatting? And if so, is it really the right place to put logic into?
 
-# How to use
+# Result
 
-The simple design makes it **2 files with 110 loc**. How about the usage?
+With simple, yet object-oriented design, there are **2 files with total of 110
+loc** with no additional dependency. The code is with strict quality rules
+of [qulice](http://www.qulice.com/) and full test coverage
+of [mutation tests](http://pitest.org/).
+
+Application supports various options like:
+* POSIX like options (i.e. `tar -zxvf foo.tar.gz`)
+* GNU like long options (i.e. `du --human-readable --max-depth=1`)
+* Java like properties (i.e. `java -Djava.awt.headless=true -Djava.net.useSystemProxies=true Foo`)
+* Short options with value attached (i.e. `gcc -O2 foo.c`)
+* Long options with single hyphen (i.e. `ant -projecthelp`)
+* Multivalued options (i.e. `-file input1.txt input2.txt`)
+* Properties with long format (i.e. `--property foo=bar`)
+* Group options (i.e. `-Xmx2048m -Xms256m -Xdebug`) even all [JVM parameters](http://javarevisited.blogspot.com/2011/11/hotspot-jvm-options-java-examples.html)
+
+How about the simplicity of use? Here are some examples.
 
 ```java
 CommandLineArgs cli = new CommandLineArgs("--human-readable");
@@ -107,3 +122,6 @@ For Pull Requests, please run `mvn clean package -Pqulice`, first.
 
 <a name="MarkKidd">1</a>: Lorenz, Mark, and Jeff Kidd. Object-Oriented
 Software Metrics. Englewood Cliffs, NJ: Prentice Hall. 1994. ISBN 0-13-179292-X
+
+<a name="LoC">2</a>: Lines of code are calculated with
+[cloc](http://cloc.sourceforge.net).
