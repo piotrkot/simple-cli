@@ -202,6 +202,19 @@ public final class CommandLineArgsTest {
     }
 
     /**
+     * Can find partial options.
+     *
+     * @throws Exception When it fails.
+     */
+    @Test
+    public void findPartialOption() throws Exception {
+        final CommandLineArgs cli = new CommandLineArgs("-ver=4.2");
+        final Option opt = cli.findOption("ver").iterator().next();
+        Assert.assertEquals("Key is not empty", "", opt.key());
+        Assert.assertEquals("Version not found", "4.2", opt.value());
+    }
+
+    /**
      * Can find exceptional options.
      *
      * @throws Exception When it fails.
@@ -221,5 +234,4 @@ public final class CommandLineArgsTest {
             cli.findOption(".*").iterator().hasNext()
         );
     }
-
 }
