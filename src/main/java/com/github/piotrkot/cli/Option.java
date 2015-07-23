@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.piokot.cli;
+package com.github.piotrkot.cli;
 
 import java.util.ArrayList;
 import java.util.List;

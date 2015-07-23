@@ -29,4 +29,4 @@
  * @version $Id$
  * @since 1.0
  */
-package com.piokot.cli;
+package com.github.piotrkot.cli;
