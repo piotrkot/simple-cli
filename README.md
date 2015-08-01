@@ -141,6 +141,15 @@ option.value(); // returns "zxvf"
 option.arguments().iterator().next(); // returns "foo.tar.gz"
 ```
 
+To get started, add dependency to your project:
+```xml
+        <dependency>
+            <groupId>com.github.piotrkot</groupId>
+            <artifactId>cli</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+```
+
 Feel free to fork me on GitHub, report bugs or post comments.
 
 For Pull Requests, please run `mvn clean package -Pqulice`, first.
