@@ -42,9 +42,9 @@ public final class CommandLineArgsTest {
      */
     @Test
     public void getOptionsWhenNone() throws Exception {
-        Assert.assertFalse(
+        Assert.assertTrue(
             "Options found",
-            new CommandLineArgs().getOptions().iterator().hasNext()
+            new CommandLineArgs().getOptions().isEmpty()
         );
     }
 

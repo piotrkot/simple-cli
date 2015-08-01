@@ -26,6 +26,7 @@ package com.github.piotrkot.cli;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -85,8 +86,10 @@ public final class CommandLineArgs {
      *
      * @return List of Options found.
      */
-    public Iterable<Option> getOptions() {
-        return this.findOption("");
+    public Collection<Option> getOptions() {
+        final Collection<Option> coll = new ArrayList<>(0);
+        this.findOption("").forEach(coll::add);
+        return Collections.unmodifiableCollection(coll);
     }
 
     /**
