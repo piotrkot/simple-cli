@@ -92,7 +92,7 @@ In my opinion, it is not.
 
 # Result
 
-With simple, yet object-oriented design, there are **2 files with total of 110
+With simple, yet object-oriented design, there are **2 files with total of 113
 loc** with no additional dependency. The code is with strict quality rules
 of [qulice](http://www.qulice.com/) and full test coverage
 of [mutation tests](http://pitest.org/).
