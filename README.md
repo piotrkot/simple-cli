@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/piotrkot/simple-cli.svg?branch=master)](https://travis-ci.org/piotrkot/simple-cli)
+[![Build status](https://ci.appveyor.com/api/projects/status/eudv3qsoogrd1h6k?svg=true)](https://ci.appveyor.com/project/piotrkot/simple-cli)
 
 # Inspiration
 
