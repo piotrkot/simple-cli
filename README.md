@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/piotrkot/simple-cli.svg?branch=master)](https://travis-ci.org/piotrkot/simple-cli)
+
 # Inspiration
 
 [Object thinking by David West](http://www.amazon.com/Object-Thinking-Developer-Reference-David/dp/0735619654) is an amazing read.
