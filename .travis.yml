@@ -7,3 +7,4 @@ before_install:
   - pip install --user codecov
 after_success:
   - codecov
+  - mvn clean cobertura:cobertura coveralls:report -DrepoToken=$REPO_TOKEN

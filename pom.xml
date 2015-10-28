@@ -47,6 +47,9 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -65,6 +68,14 @@
                     <source>1.8</source>
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.0.0</version>
+                <configuration>
+                    <repoToken>token</repoToken>
                 </configuration>
             </plugin>
         </plugins>
@@ -135,6 +146,17 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                        <version>2.7</version>
+                        <configuration>
+                            <format>xml</format>
+                            <maxmem>256m</maxmem>
+                            <!-- aggregated reports for multi-module projects -->
+                            <aggregate>true</aggregate>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
