@@ -16,6 +16,8 @@ skip_tags: true
 # set clone depth
 clone_depth: 5                      # clone entire repository history if not defined
 
+build:
+  off
 test_script:
   - mvn clean install -Pqulice
 
