@@ -6,5 +6,6 @@ script:
 before_install:
   - pip install --user codecov
 after_success:
+  - cat target/site/jacoco/jacoco.xml
   - codecov --dump
   - mvn clean test jacoco:report cobertura:cobertura coveralls:report -Pqulice -DrepoToken=$REPO_TOKEN
