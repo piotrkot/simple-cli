@@ -6,6 +6,7 @@ script:
 before_install:
   - pip install --user codecov
 after_success:
-  - cat target/site/jacoco/jacoco.xml
+  - cat /home/travis/build/piotrkot/simple-cli/target/site/jacoco/jacoco.xml
+  - bash <(curl -s https://codecov.io/bash) -d
   - codecov --dump
   - mvn clean test jacoco:report cobertura:cobertura coveralls:report -Pqulice -DrepoToken=$REPO_TOKEN
