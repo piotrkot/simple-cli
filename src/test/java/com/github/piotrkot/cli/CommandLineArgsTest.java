@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 piotrkot
+ * Copyright (c) 2015-2018 piotrkot
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,9 @@
 package com.github.piotrkot.cli;
 
 import java.util.Iterator;
-import org.junit.Assert;
+import java.util.NoSuchElementException;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -42,9 +44,8 @@ public final class CommandLineArgsTest {
      */
     @Test
     public void getOptionsWhenNone() throws Exception {
-        Assert.assertTrue(
-            "Options found",
-            new CommandLineArgs().getOptions().isEmpty()
+        MatcherAssert.assertThat(
+            new CommandLineArgs().getOptions(), Matchers.empty()
         );
     }
 
@@ -66,42 +67,16 @@ public final class CommandLineArgsTest {
             "-D",
             "par=10"
         ).getOptions().iterator();
-        Assert.assertEquals(
-            "Short option incorrect",
-            "x",
-            options.next().value()
-        );
-        Assert.assertEquals(
-            "Short POSIX option incorrect",
-            "fvx",
-            options.next().value()
-        );
-        Assert.assertEquals(
-            "Long option incorrect",
-            "help",
-            options.next().value()
-        );
-        Assert.assertEquals(
-            "Short with param option incorrect",
-            "3",
-            options.next().value()
-        );
+        MatcherAssert.assertThat(options.next().value(), Matchers.is("x"));
+        MatcherAssert.assertThat(options.next().value(), Matchers.is("fvx"));
+        MatcherAssert.assertThat(options.next().value(), Matchers.is("help"));
+        MatcherAssert.assertThat(options.next().value(), Matchers.is("3"));
         final Option withfile = options.next();
-        Assert.assertEquals(
-            "Short with arg option incorrect",
-            "f",
-            withfile.value()
+        MatcherAssert.assertThat(withfile.value(), Matchers.is("f"));
+        MatcherAssert.assertThat(
+            withfile.arguments().iterator().next(), Matchers.is(file)
         );
-        Assert.assertEquals(
-            "Short with arg argument incorrect",
-            file,
-            withfile.arguments().iterator().next()
-        );
-        Assert.assertEquals(
-            "Long with param option incorrect",
-            "10",
-            options.next().value()
-        );
+        MatcherAssert.assertThat(options.next().value(), Matchers.is("10"));
     }
 
     /**
@@ -110,15 +85,13 @@ public final class CommandLineArgsTest {
      * @throws Exception When it fails.
      */
     @Test
-    public void findPOSIXOption() throws Exception {
+    public void findPosixOption() throws Exception {
         final String tar = "foo.tar.gz";
         final Option option = new CommandLineArgs("-zxvf", tar)
             .getOptions().iterator().next();
-        Assert.assertEquals("Posix opt found", "zxvf", option.value());
-        Assert.assertEquals(
-            "Tar file not found",
-            tar,
-            option.arguments().iterator().next()
+        MatcherAssert.assertThat(option.value(), Matchers.is("zxvf"));
+        MatcherAssert.assertThat(
+            option.arguments().iterator().next(), Matchers.is(tar)
         );
     }
 
@@ -128,19 +101,18 @@ public final class CommandLineArgsTest {
      * @throws Exception When it fails.
      */
     @Test
-    public void findGNUOption() throws Exception {
+    public void findGnuOption() throws Exception {
         final CommandLineArgs cli = new CommandLineArgs(
             "--human-readable",
             "--max-depth=1"
         );
-        Assert.assertTrue(
-            "Gnu opt not found",
-            cli.findOption("human-readable").iterator().hasNext()
+        MatcherAssert.assertThat(
+            cli.findOption("human-readable").iterator().hasNext(),
+            Matchers.is(true)
         );
-        Assert.assertEquals(
-            "Gnu opt value not found",
-            "1",
-            cli.findOption("max-depth").iterator().next().value()
+        MatcherAssert.assertThat(
+            cli.findOption("max-depth").iterator().next().value(),
+            Matchers.is("1")
         );
     }
 
@@ -158,27 +130,13 @@ public final class CommandLineArgsTest {
         );
         final Iterator<Option> iter = cli.findOption("D").iterator();
         Option opt = iter.next();
-        Assert.assertEquals(
-            "Java like opt 1 key not found",
-            "java.awt.headless",
-            opt.key()
-        );
-        Assert.assertEquals(
-            "Java like opt 1 value not found",
-            truee,
-            opt.value()
-        );
+        MatcherAssert.assertThat(opt.key(), Matchers.is("java.awt.headless"));
+        MatcherAssert.assertThat(opt.value(), Matchers.is(truee));
         opt = iter.next();
-        Assert.assertEquals(
-            "Java like opt 2 key not found",
-            "java.net.useSystemProxies",
-            opt.key()
+        MatcherAssert.assertThat(
+            opt.key(), Matchers.is("java.net.useSystemProxies")
         );
-        Assert.assertEquals(
-            "Java like opt 2 value not found",
-            truee,
-            opt.value()
-        );
+        MatcherAssert.assertThat(opt.value(), Matchers.is(truee));
     }
 
     /**
@@ -189,15 +147,11 @@ public final class CommandLineArgsTest {
     @Test
     public void findShortOptionWithValue() throws Exception {
         final CommandLineArgs cli = new CommandLineArgs("-O2");
-        Assert.assertEquals(
-            "Opt not found by short name",
-            "2",
-            cli.findOption("O").iterator().next().value()
+        MatcherAssert.assertThat(
+            cli.findOption("O").iterator().next().value(), Matchers.is("2")
         );
-        Assert.assertEquals(
-            "Opt not found by all",
-            "O2",
-            cli.getOptions().iterator().next().value()
+        MatcherAssert.assertThat(
+            cli.getOptions().iterator().next().value(), Matchers.is("O2")
         );
     }
 
@@ -210,8 +164,8 @@ public final class CommandLineArgsTest {
     public void findPartialOption() throws Exception {
         final CommandLineArgs cli = new CommandLineArgs("-ver=4.2");
         final Option opt = cli.findOption("ver").iterator().next();
-        Assert.assertEquals("Key is not empty", "", opt.key());
-        Assert.assertEquals("Version not found", "4.2", opt.value());
+        MatcherAssert.assertThat(opt.key(), Matchers.is(""));
+        MatcherAssert.assertThat(opt.value(), Matchers.is("4.2"));
     }
 
     /**
@@ -223,15 +177,37 @@ public final class CommandLineArgsTest {
     public void findExceptionOption() throws Exception {
         final CommandLineArgs cli = new CommandLineArgs("--process=do");
         final Option dashopt = cli.findOption("-").iterator().next();
-        Assert.assertEquals("Key dash found", "process", dashopt.key());
-        Assert.assertEquals("Val dash found", "do", dashopt.value());
-        Assert.assertFalse(
-            "Opt equals found",
-            cli.findOption("=").iterator().hasNext()
+        MatcherAssert.assertThat(dashopt.key(), Matchers.is("process"));
+        MatcherAssert.assertThat(dashopt.value(), Matchers.is("do"));
+        MatcherAssert.assertThat(
+            cli.findOption("=").iterator().hasNext(), Matchers.is(false)
         );
-        Assert.assertFalse(
-            "Opt dot star found",
-            cli.findOption(".*").iterator().hasNext()
+        MatcherAssert.assertThat(
+            cli.findOption(".*").iterator().hasNext(), Matchers.is(false)
         );
+    }
+
+    /**
+     * Can find first option.
+     *
+     * @throws Exception When it fails.
+     */
+    @Test
+    public void findFirstOption() throws Exception {
+        final CommandLineArgs cli = new CommandLineArgs(
+            "--dupl=1", "--duplA=2"
+        );
+        final Option dupl = cli.findFirstOption("dupl");
+        MatcherAssert.assertThat(dupl.value(), Matchers.is("1"));
+    }
+    /**
+     * Can not find first option.
+     *
+     * @throws Exception When it fails.
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void findFirstNoneOption() throws Exception {
+        final CommandLineArgs cli = new CommandLineArgs("--du=1", "--duA=2");
+        cli.findFirstOption("duplic");
     }
 }

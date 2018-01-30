@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 piotrkot
+ * Copyright (c) 2015-2018 piotrkot
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
  */
 package com.github.piotrkot.cli;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,7 +44,7 @@ public final class CommandLineArgs {
     /**
      * Command line arguments.
      */
-    private final transient Collection<String> args;
+    private final Collection<String> args;
 
     /**
      * Class constructor.
@@ -57,14 +56,14 @@ public final class CommandLineArgs {
     }
 
     /**
-     * Finds option by a name.
+     * Finds option by name.
      *
      * @param name Option name, that is a string right after the option dash.
      * @return List of Options found for given name.
      */
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public Iterable<Option> findOption(final String name) {
-        final List<Option> options = new ArrayList<>(0);
+        final List<Option> options = new LinkedList<>();
         final String main = String.format("^-+%s.*", Pattern.quote(name));
         final String dash = String.format("^-+%s", Pattern.quote(name));
         final FetchSubList<String> params = new FetchSubList<>(this.args);
@@ -80,6 +79,15 @@ public final class CommandLineArgs {
         }
         return options;
     }
+    /**
+     * Finds first option by name.
+     *
+     * @param name Option name, that is a string right after the option dash.
+     * @return First Option found for given name.
+     */
+    public Option findFirstOption(final String name) {
+        return this.findOption(name).iterator().next();
+    }
 
     /**
      * Gets all options provided.
@@ -87,7 +95,7 @@ public final class CommandLineArgs {
      * @return List of Options found.
      */
     public Collection<Option> getOptions() {
-        final Collection<Option> coll = new ArrayList<>(0);
+        final Collection<Option> coll = new LinkedList<>();
         this.findOption("").forEach(coll::add);
         return Collections.unmodifiableCollection(coll);
     }
@@ -97,13 +105,17 @@ public final class CommandLineArgs {
      *
      * @param <E> Type of elements in the list.
      */
-    class FetchSubList<E> extends LinkedList<E> {
+    private static class FetchSubList<E> extends LinkedList<E> {
+        /**
+         * Serial version.
+         */
+        private static final long serialVersionUID = 0L;
         /**
          * Class constructor.
          *
          * @param coll Collection of elements to be placed in the list.
          */
-        public FetchSubList(final Collection<? extends E> coll) {
+        FetchSubList(final Collection<? extends E> coll) {
             super(coll);
         }
 
@@ -116,7 +128,7 @@ public final class CommandLineArgs {
          * @return Collection of elements satisfying predicate.
          */
         public Collection<E> fetchUntil(final E elem, final Predicate<E> pred) {
-            final Collection<E> collection = new ArrayList<>(0);
+            final Collection<E> collection = new LinkedList<>();
             final ListIterator<E> iter =
                 this.listIterator(this.indexOf(elem) + 1);
             while (iter.hasNext()) {

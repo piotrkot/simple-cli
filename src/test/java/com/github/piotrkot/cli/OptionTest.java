@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 piotrkot
+ * Copyright (c) 2015-2018 piotrkot
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,8 @@ package com.github.piotrkot.cli;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
-import org.junit.Assert;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
@@ -44,10 +45,10 @@ public final class OptionTest {
      */
     @Test
     public void returnEmptyArguments() throws Exception {
-        Assert.assertFalse(
-            "Arguments exist",
-            new Option("empty", Collections.<String>emptyList()).arguments()
-                .iterator().hasNext()
+        MatcherAssert.assertThat(
+            new Option("empty", Collections.emptyList()).arguments()
+                .iterator().hasNext(),
+            Matchers.is(false)
         );
     }
 
@@ -60,15 +61,10 @@ public final class OptionTest {
     public void returnOneArgumentWithParamAfter() throws Exception {
         final String file = "filee";
         final Iterator<String> args = new Option(
-            "a",
-            Arrays.asList(file, "par=10")
+            "a", Arrays.asList(file, "par=10")
         ).arguments().iterator();
-        Assert.assertEquals(
-            "Argument file correct",
-            file,
-            args.next()
-        );
-        Assert.assertFalse("Param after is an argument", args.hasNext());
+        MatcherAssert.assertThat(args.next(), Matchers.is(file));
+        MatcherAssert.assertThat(args.hasNext(), Matchers.is(false));
     }
 
     /**
@@ -83,12 +79,8 @@ public final class OptionTest {
             "b",
             Arrays.asList("pp=xx", file)
         ).arguments().iterator();
-        Assert.assertEquals(
-            "Argument newfile correct",
-            file,
-            args.next()
-        );
-        Assert.assertFalse("Param before is an argument", args.hasNext());
+        MatcherAssert.assertThat(args.next(), Matchers.is(file));
+        MatcherAssert.assertThat(args.hasNext(), Matchers.is(false));
     }
 
     /**
@@ -101,20 +93,11 @@ public final class OptionTest {
         final String fone = "newfile1";
         final String ftwo = "newfile2";
         final Iterator<String> args = new Option(
-            "two",
-            Arrays.asList(fone, ftwo)
+            "two", Arrays.asList(fone, ftwo)
         ).arguments().iterator();
-        Assert.assertEquals(
-            "Argument first correct",
-            fone,
-            args.next()
-        );
-        Assert.assertEquals(
-            "Argument second correct",
-            ftwo,
-            args.next()
-        );
-        Assert.assertFalse("More arguments", args.hasNext());
+        MatcherAssert.assertThat(args.next(), Matchers.is(fone));
+        MatcherAssert.assertThat(args.next(), Matchers.is(ftwo));
+        MatcherAssert.assertThat(args.hasNext(), Matchers.is(false));
     }
 
     /**
@@ -124,13 +107,13 @@ public final class OptionTest {
      */
     @Test
     public void returnEmptyValue() throws Exception {
-        Assert.assertTrue(
-            "Non empty value",
-            new Option("", Collections.<String>emptyList()).value().isEmpty()
+        MatcherAssert.assertThat(
+            new Option("", Collections.emptyList()).value(),
+            Matchers.is("")
         );
-        Assert.assertTrue(
-            "Non empty value with arg",
-            new Option("", Collections.singletonList("arg")).value().isEmpty()
+        MatcherAssert.assertThat(
+            new Option("", Collections.singletonList("arg")).value(),
+            Matchers.is("")
         );
     }
 
@@ -142,15 +125,13 @@ public final class OptionTest {
     @Test
     public void returnSingleValue() throws Exception {
         final String val = "value";
-        Assert.assertEquals(
-            "Wrong value",
-            val,
-            new Option(val, Collections.<String>emptyList()).value()
+        MatcherAssert.assertThat(
+            new Option(val, Collections.emptyList()).value(),
+            Matchers.is(val)
         );
-        Assert.assertEquals(
-            "Wrong value with arg",
-            val,
-            new Option(val, Collections.singletonList("ar")).value()
+        MatcherAssert.assertThat(
+            new Option(val, Collections.singletonList("ar")).value(),
+            Matchers.is(val)
         );
     }
 
@@ -161,15 +142,13 @@ public final class OptionTest {
      */
     @Test
     public void returnExceptionalValue() throws Exception {
-        Assert.assertEquals(
-            "Non empty exception value",
-            "",
-            new Option("par1=", Collections.<String>emptyList()).value()
+        MatcherAssert.assertThat(
+            new Option("par1=", Collections.emptyList()).value(),
+            Matchers.is("")
         );
-        Assert.assertEquals(
-            "Wrong value with no key",
-            "val1",
-            new Option("=val1", Collections.<String>emptyList()).value()
+        MatcherAssert.assertThat(
+            new Option("=val1", Collections.emptyList()).value(),
+            Matchers.is("val1")
         );
     }
 
@@ -180,17 +159,17 @@ public final class OptionTest {
      */
     @Test
     public void returnEmptyKey() throws Exception {
-        Assert.assertTrue(
-            "Non empty key",
-            new Option("", Collections.<String>emptyList()).key().isEmpty()
+        MatcherAssert.assertThat(
+            new Option("", Collections.emptyList()).key(),
+            Matchers.is("")
         );
-        Assert.assertTrue(
-            "Non empty key with arg",
-            new Option("", Collections.singletonList("key")).key().isEmpty()
+        MatcherAssert.assertThat(
+            new Option("", Collections.singletonList("key")).key(),
+            Matchers.is("")
         );
-        Assert.assertTrue(
-            "Non empty key with value",
-            new Option("kval", Collections.singletonList("kk")).key().isEmpty()
+        MatcherAssert.assertThat(
+            new Option("kval", Collections.singletonList("kk")).key(),
+            Matchers.is("")
         );
     }
 
@@ -202,25 +181,21 @@ public final class OptionTest {
     @Test
     public void returnKey() throws Exception {
         final String key = "k";
-        Assert.assertEquals(
-            "Empty key",
-            "Kk",
-            new Option("K", Collections.singletonList("k=val")).key()
+        MatcherAssert.assertThat(
+            new Option("K", Collections.singletonList("k=val")).key(),
+            Matchers.is("Kk")
         );
-        Assert.assertEquals(
-            "Empty key with arg",
-            key,
-            new Option("", Arrays.asList("k=vval", "file")).key()
+        MatcherAssert.assertThat(
+            new Option("", Arrays.asList("k=vval", "file")).key(),
+            Matchers.is(key)
         );
-        Assert.assertEquals(
-            "Empty key with arg reordered",
-            key,
-            new Option("", Arrays.asList("file.x", "k=xx")).key()
+        MatcherAssert.assertThat(
+            new Option("", Arrays.asList("file.x", "k=xx")).key(),
+            Matchers.is(key)
         );
-        Assert.assertEquals(
-            "Empty key in main part",
-            key,
-            new Option("k=xad", Collections.<String>emptyList()).key()
+        MatcherAssert.assertThat(
+            new Option("k=xad", Collections.emptyList()).key(),
+            Matchers.is(key)
         );
     }
 
@@ -231,15 +206,13 @@ public final class OptionTest {
      */
     @Test
     public void returnExceptionalKey() throws Exception {
-        Assert.assertEquals(
-            "Non empty exception key",
-            "",
-            new Option("=val", Collections.<String>emptyList()).key()
+        MatcherAssert.assertThat(
+            new Option("=val", Collections.emptyList()).key(),
+            Matchers.is("")
         );
-        Assert.assertEquals(
-            "Wrong key with no value",
-            "key1",
-            new Option("key1=", Collections.<String>emptyList()).key()
+        MatcherAssert.assertThat(
+            new Option("key1=", Collections.emptyList()).key(),
+            Matchers.is("key1")
         );
     }
 }

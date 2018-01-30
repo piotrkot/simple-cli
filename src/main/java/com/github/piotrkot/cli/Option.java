@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 piotrkot
+ * Copyright (c) 2015-2018 piotrkot
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  */
 package com.github.piotrkot.cli;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -42,11 +42,11 @@ public final class Option {
     /**
      * Main option part.
      */
-    private final transient String prime;
+    private final String prime;
     /**
      * Command line parameters.
      */
-    private final transient Iterable<String> params;
+    private final Iterable<String> params;
 
     /**
      * Class constructor.
@@ -71,9 +71,9 @@ public final class Option {
      * @return List of String arguments.
      */
     public Iterable<String> arguments() {
-        final List<String> args = new ArrayList<>(0);
+        final List<String> args = new LinkedList<>();
         for (final String par : this.params) {
-            if (!par.contains(EQ)) {
+            if (!par.contains(Option.EQ)) {
                 args.add(par);
             }
         }
@@ -90,12 +90,12 @@ public final class Option {
      */
     public String key() {
         String key = "";
-        if (this.prime.contains(EQ)) {
-            key = this.prime.split(EQ)[0];
+        if (this.prime.contains(Option.EQ)) {
+            key = this.prime.split(Option.EQ)[0];
         } else {
             for (final String par : this.params) {
-                if (par.contains(EQ)) {
-                    key = this.prime + par.split(EQ)[0];
+                if (par.contains(Option.EQ)) {
+                    key = this.prime + par.split(Option.EQ)[0];
                     break;
                 }
             }
@@ -116,17 +116,17 @@ public final class Option {
      */
     public String value() {
         String val = "";
-        if (this.prime.contains(EQ)) {
-            if (this.prime.split(EQ).length == 2) {
-                val = this.prime.split(EQ)[1];
+        if (this.prime.contains(Option.EQ)) {
+            if (this.prime.split(Option.EQ).length == 2) {
+                val = this.prime.split(Option.EQ)[1];
             }
         } else {
             val = this.prime;
             for (final String par : this.params) {
-                if (par.contains(EQ)) {
+                if (par.contains(Option.EQ)) {
                     //@checkstyle NestedIfDepthCheck (1 line)
-                    if (par.split(EQ).length == 2) {
-                        val = par.split(EQ)[1];
+                    if (par.split(Option.EQ).length == 2) {
+                        val = par.split(Option.EQ)[1];
                     }
                     break;
                 }
