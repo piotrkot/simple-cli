@@ -96,7 +96,7 @@ In my opinion, it is not.
 
 # Result
 
-With simple, yet object-oriented design, there are **2 files with total of 113
+With simple, yet object-oriented design, there are **2 files with total of 116
 loc (which is the smallest code base size!)** with no additional dependency.
 The code follows strict quality rules
 of [qulice](http://www.qulice.com/) with full test coverage
@@ -120,7 +120,7 @@ cli.findOption("human-readable").iterator().hasNext(); // returns true
 ```
 ```java
 CommandLineArgs cli = new CommandLineArgs("--max-depth=1");
-cli.findOption("max-depth").iterator().next().value(); // returns "1"
+cli.findFirstOption("max-depth").value(); // returns "1"
 ```
 For ambiguous options we have an interpretation choice.
 ```java
@@ -151,7 +151,7 @@ To get started, add dependency to your project:
         <dependency>
             <groupId>com.github.piotrkot</groupId>
             <artifactId>cli</artifactId>
-            <version>1.1.0</version>
+            <version>1.2.0</version>
         </dependency>
 ```
 
