@@ -1,7 +1,7 @@
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2018 piotrkot
+ * Copyright (c) 2015-2021 piotrkot
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,11 @@
  */
 package com.github.piotrkot.cli;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -36,8 +38,6 @@ import java.util.regex.Pattern;
  * Main Command Line class which finds options in simple and object oriented
  * fashion.
  *
- * @author Piotr Kotlicki (piotr.kotlicki@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 public final class CommandLineArgs {
@@ -47,12 +47,28 @@ public final class CommandLineArgs {
     private final Collection<String> args;
 
     /**
+     * Helping exception.
+     */
+    private final HelpException help;
+
+    /**
      * Class constructor.
      *
      * @param arguments Command line arguments.
      */
     public CommandLineArgs(final String... arguments) {
+        this(new HelpException("Wrong usage of arguments"), arguments);
+    }
+
+    /**
+     * Class constructor.
+     *
+     * @param help Helping message exception.
+     * @param arguments Command line arguments.
+     */
+    public CommandLineArgs(final HelpException help, final String... arguments) {
         this.args = Arrays.asList(arguments);
+        this.help = help;
     }
 
     /**
@@ -79,14 +95,20 @@ public final class CommandLineArgs {
         }
         return options;
     }
+
     /**
      * Finds first option by name.
      *
      * @param name Option name, that is a string right after the option dash.
      * @return First Option found for given name.
+     * @throws IOException When there is no option found.
      */
-    public Option findFirstOption(final String name) {
-        return this.findOption(name).iterator().next();
+    public Option findFirstOption(final String name) throws IOException {
+        final Iterator<Option> options = this.findOption(name).iterator();
+        if (options.hasNext()) {
+            return options.next();
+        }
+        throw this.help;
     }
 
     /**
@@ -110,6 +132,7 @@ public final class CommandLineArgs {
          * Serial version.
          */
         private static final long serialVersionUID = 0L;
+
         /**
          * Class constructor.
          *

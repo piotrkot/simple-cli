@@ -21,12 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.github.piotrkot.cli;
+
+import java.io.IOException;
 
 /**
- * Implementation of simple Command Line Interface.
+ * Command Line help as an exception.
  *
- * @author Piotr Kotlicki (piotr.kotlicki@gmail.com)
- * @version $Id$
  * @since 1.0
  */
-package com.github.piotrkot.cli;
+public final class HelpException extends IOException {
+    /**
+     * Class constructor.
+     *
+     * @param message Message explaining how to use command line parameters.
+     */
+    public HelpException(final String message) {
+        super(message);
+    }
+}

@@ -96,7 +96,7 @@ In my opinion, it is not.
 
 # Result
 
-With simple, yet object-oriented design, there are **2 files with total of 116
+With simple, yet object-oriented design, there are **3 files with total of 134
 loc (which is the smallest code base size!)** with no additional dependency.
 The code follows strict quality rules
 of [qulice](http://www.qulice.com/) with full test coverage
@@ -151,7 +151,7 @@ To get started, add dependency to your project:
         <dependency>
             <groupId>com.github.piotrkot</groupId>
             <artifactId>cli</artifactId>
-            <version>1.2.0</version>
+            <version>1.3.0</version>
         </dependency>
 ```
 

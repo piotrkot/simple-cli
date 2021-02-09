@@ -1,7 +1,7 @@
-/**
+/*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2018 piotrkot
+ * Copyright (c) 2015-2021 piotrkot
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@
 package com.github.piotrkot.cli;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -32,8 +31,6 @@ import org.junit.Test;
 /**
  * Tests for {@link CommandLineArgs} class.
  *
- * @author Piotr Kotlicki (piotr.kotlicki@gmail.com)
- * @version $Id$
  * @since 1.0
  */
 public final class CommandLineArgsTest {
@@ -200,14 +197,17 @@ public final class CommandLineArgsTest {
         final Option dupl = cli.findFirstOption("dupl");
         MatcherAssert.assertThat(dupl.value(), Matchers.is("1"));
     }
+
     /**
      * Can not find first option.
      *
      * @throws Exception When it fails.
      */
-    @Test(expected = NoSuchElementException.class)
+    @Test(expected = HelpException.class)
     public void findFirstNoneOption() throws Exception {
-        final CommandLineArgs cli = new CommandLineArgs("--du=1", "--duA=2");
+        final CommandLineArgs cli = new CommandLineArgs(
+            "--du=1", "--duA=2"
+        );
         cli.findFirstOption("duplic");
     }
 }
