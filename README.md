@@ -146,6 +146,19 @@ option.value(); // returns "zxvf"
 option.arguments().iterator().next(); // returns "foo.tar.gz"
 ```
 
+It is quite natural to inform the users how to use the command line program.
+For we show a special help message when user requests for it, e.g.
+providing `--help` parameter or when makes a mistake using the program.
+
+The latter case can be automatically handled with:
+```java
+CommandLineArgs cli = new CommandLineArgs(
+    new HelpException("Allowed param is 'abc'"),
+    "-abc"
+);
+cli.findFirstOption("bcd"); // prints "Allowed param is 'abc'" as an exception
+```
+
 To get started, add dependency to your project:
 ```xml
         <dependency>
