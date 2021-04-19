@@ -4,8 +4,5 @@ jdk:
   - oraclejdk8
 script:
   - mvn clean install -Pqulice
-before_install:
-  - pip install --user codecov
 after_success:
-  - codecov
   - mvn clean test jacoco:report cobertura:cobertura coveralls:report -Pqulice -DrepoToken=$REPO_TOKEN
